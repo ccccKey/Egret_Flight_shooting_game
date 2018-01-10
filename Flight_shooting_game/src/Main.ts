@@ -35,11 +35,114 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private onAddToStage(event: egret.Event) {
+        //初始化Resource资源加载库
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
     }
 
-    private onConfigComplete(event:RES.ResourceEvent){
+    /**配置文件加载完成,开始预加载preload资源组。*/
+    private onConfigComplete(event: RES.ResourceEvent) {
+        RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
+        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onGroupComplete, this);
+        RES.loadGroup("preload");
+    }
 
+    /** preload资源组加载完成*/
+    private onGroupComplete(event: RES.ResourceEvent) {
+        if (event.groupName == "preload") {
+            RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onGroupComplete, this);
+            this.createScene();
+        }
+    }
+
+    /** 测试用的位图 */
+    private background: egret.Bitmap;
+
+    private boss: egret.Bitmap;
+    private bossSpeed: number;
+    private bossDirection: number;
+
+    private stageWidth:number;
+    private stageHeight:number;
+
+    /**
+    * 创建游戏场景
+    * Create a game scene
+    */
+    private createScene() {
+        this.stageWidth = this.stage.stageWidth;
+        this.stageHeight = this.stage.stageHeight;
+
+        this.background = new egret.Bitmap();
+        this.background.texture = RES.getRes("bg_jpg");
+        this.background.fillMode = egret.BitmapFillMode.SCALE;
+        this.addChild(this.background);
+
+        this.boss = new egret.Bitmap();
+        this.boss.texture = RES.getRes("f2_png");
+        this.boss.$setScaleX(2);
+        this.boss.$setScaleY(2);
+        this.addChild(this.boss);
+        // this.boss.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+
+        this.bossSpeed = 0.05;
+        // this.bossSpeed = 1;
+        this.bossDirection = 1;
+
+        egret.startTick(this.onTicker, this);
+    }
+
+    private onEnterFrame(e: egret.Event) {
+        var x = this.boss.x;
+        var y = this.boss.y;
+        if (y < this.stageHeight - this.boss.height) {
+            this.boss.y += this.bossSpeed;
+        }
+        if (x < this.stageWidth - this.boss.width && x > 0) {
+            this.boss.x += this.bossSpeed * this.bossDirection;
+        } else if (x <= 0) {
+            this.boss.x += this.bossSpeed;
+            this.bossDirection = 1;
+        } else {
+            this.boss.x -= this.bossSpeed;
+            this.bossDirection = -1;
+        }
+    }
+
+    //将每次调用Tick的时间保存下来
+    private now: number = 0;
+
+    private onTicker(time: number) {
+        //初始化时间
+        if (!this.now)
+            this.now = time;
+
+        var then: number = time;
+        //计算时间间隔
+        var pass: number = then - this.now;
+
+        var x = this.boss.x;
+        var y = this.boss.y;
+        if (y < this.stageHeight - this.boss.height) {
+            this.boss.y += this.bossSpeed * pass;
+        }
+
+        console.log(this.stageWidth);
+        console.log(this.stageHeight);
+        // console.log(x);
+        if (x < this.stageWidth - this.boss.width && x > 0) {
+            this.boss.x += this.bossSpeed * pass * this.bossDirection;
+        } else if (x <= 0) {
+            this.boss.x += this.bossSpeed * pass;
+            this.bossDirection = 1;
+        } else if (x >= this.stageWidth - this.boss.width)  {
+            this.boss.x -= this.bossSpeed * pass;
+            this.bossDirection = -1;
+        }
+
+        //刷新时间
+        this.now = then;
+
+        return false;
     }
 }
