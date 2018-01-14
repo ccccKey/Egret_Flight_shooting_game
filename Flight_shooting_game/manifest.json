@@ -12,7 +12,11 @@
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
+		"bin-debug/fighter/Airplane.js",
+		"bin-debug/fighter/BgMap.js",
+		"bin-debug/fighter/Bullet.js",
 		"bin-debug/fighter/GameContainer.js",
+		"bin-debug/fighter/ScorePanel.js",
 		"bin-debug/utils/GameUtil.js"
 	]
 }

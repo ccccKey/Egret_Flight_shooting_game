@@ -60,7 +60,10 @@ var Main = (function (_super) {
     Main.prototype.onGroupComplete = function (event) {
         if (event.groupName == "preload") {
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onGroupComplete, this);
-            this.createScene();
+            // this.createScene();
+            //游戏的主类开始实例化
+            var gameContainer = new fighter.GameContainer();
+            this.addChild(gameContainer);
         }
     };
     /**
@@ -68,22 +71,28 @@ var Main = (function (_super) {
     * Create a game scene
     */
     Main.prototype.createScene = function () {
-        this.stageWidth = this.stage.stageWidth;
-        this.stageHeight = this.stage.stageHeight;
-        this.background = new egret.Bitmap();
-        this.background.texture = RES.getRes("bg_jpg");
-        this.background.fillMode = egret.BitmapFillMode.SCALE;
-        this.addChild(this.background);
-        this.boss = new egret.Bitmap();
-        this.boss.texture = RES.getRes("f2_png");
-        this.boss.$setScaleX(2);
-        this.boss.$setScaleY(2);
-        this.addChild(this.boss);
-        // this.boss.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
-        this.bossSpeed = 0.05;
-        // this.bossSpeed = 1;
-        this.bossDirection = 1;
-        egret.startTick(this.onTicker, this);
+        // this.stageWidth = this.stage.stageWidth;
+        // this.stageHeight = this.stage.stageHeight;
+        // //开始按钮
+        // this.btnStart = fighter.createBitmapByName("btn_start");
+        // this.btnStart.x = (this.stageWidth - this.btnStart.width) * 0.5;
+        // this.btnStart.y = (this.stageHeight - this.btnStart.height) * 0.5;
+        // this.btnStart.touchEnabled = true;
+        // this.addChild(this.btnStart);
+        // this.background = new egret.Bitmap();
+        // this.background.texture = RES.getRes("bg_jpg");
+        // this.background.fillMode = egret.BitmapFillMode.SCALE;
+        // this.addChild(this.background);
+        // this.boss = new egret.Bitmap();
+        // this.boss.texture = RES.getRes("f2_png");
+        // this.boss.$setScaleX(2);
+        // this.boss.$setScaleY(2);
+        // this.addChild(this.boss);
+        // // this.boss.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+        // this.bossSpeed = 0.05;
+        // // this.bossSpeed = 1;
+        // this.bossDirection = 1;
+        // egret.startTick(this.onTicker, this);
     };
     Main.prototype.onEnterFrame = function (e) {
         var x = this.boss.x;
@@ -114,9 +123,6 @@ var Main = (function (_super) {
         var y = this.boss.y;
         if (y < this.stageHeight - this.boss.height) {
             this.boss.y += this.bossSpeed * pass;
-        }
-        else if (y >= this.stageHeight - this.boss.width) {
-            this.boss.x -= this.bossSpeed * pass;
         }
         console.log(this.stageWidth);
         console.log(this.stageHeight);

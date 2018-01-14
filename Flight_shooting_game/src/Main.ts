@@ -51,7 +51,11 @@ class Main extends egret.DisplayObjectContainer {
     private onGroupComplete(event: RES.ResourceEvent) {
         if (event.groupName == "preload") {
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onGroupComplete, this);
-            this.createScene();
+            // this.createScene();
+
+            //游戏的主类开始实例化
+            var gameContainer:fighter.GameContainer = new fighter.GameContainer();
+            this.addChild(gameContainer);
         }
     }
 
@@ -65,31 +69,41 @@ class Main extends egret.DisplayObjectContainer {
     private stageWidth:number;
     private stageHeight:number;
 
+    /**开始按钮*/
+   private btnStart:egret.Bitmap;
+
     /**
     * 创建游戏场景
     * Create a game scene
     */
     private createScene() {
-        this.stageWidth = this.stage.stageWidth;
-        this.stageHeight = this.stage.stageHeight;
+        // this.stageWidth = this.stage.stageWidth;
+        // this.stageHeight = this.stage.stageHeight;
 
-        this.background = new egret.Bitmap();
-        this.background.texture = RES.getRes("bg_jpg");
-        this.background.fillMode = egret.BitmapFillMode.SCALE;
-        this.addChild(this.background);
+        // //开始按钮
+        // this.btnStart = fighter.createBitmapByName("btn_start");
+        // this.btnStart.x = (this.stageWidth - this.btnStart.width) * 0.5;
+        // this.btnStart.y = (this.stageHeight - this.btnStart.height) * 0.5;
+        // this.btnStart.touchEnabled = true;
+        // this.addChild(this.btnStart);
 
-        this.boss = new egret.Bitmap();
-        this.boss.texture = RES.getRes("f2_png");
-        this.boss.$setScaleX(2);
-        this.boss.$setScaleY(2);
-        this.addChild(this.boss);
-        // this.boss.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+        // this.background = new egret.Bitmap();
+        // this.background.texture = RES.getRes("bg_jpg");
+        // this.background.fillMode = egret.BitmapFillMode.SCALE;
+        // this.addChild(this.background);
 
-        this.bossSpeed = 0.05;
-        // this.bossSpeed = 1;
-        this.bossDirection = 1;
+        // this.boss = new egret.Bitmap();
+        // this.boss.texture = RES.getRes("f2_png");
+        // this.boss.$setScaleX(2);
+        // this.boss.$setScaleY(2);
+        // this.addChild(this.boss);
+        // // this.boss.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
 
-        egret.startTick(this.onTicker, this);
+        // this.bossSpeed = 0.05;
+        // // this.bossSpeed = 1;
+        // this.bossDirection = 1;
+
+        // egret.startTick(this.onTicker, this);
     }
 
     private onEnterFrame(e: egret.Event) {
